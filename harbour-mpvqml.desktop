@@ -5,6 +5,11 @@ Icon=harbour-mpvqml
 Exec=/usr/bin/harbour-mpvqml
 Name=MpvQml
 Name[ru]=MpvQml
+Exec=/usr/bin/org.meecast.mpvqml
+MimeType=video/mp4;video/dv;video/mpeg;video/x-mpeg;video/msvideo;video/quicktime;video/x-anim;video/x-avi;video/x-ms-asf;video/x-ms-wmv;video/x-msvideo;video/x-nsv;video/x-flc;video/x-fli;video/x-flv;video/vnd.rn-realvideo;video/mp4;video/mp4v-es;video/mp2t;video/x-matroska;video/webm;
+X-Maemo-Service=org.meecast.mpvqml
+X-Maemo-Object-Path=/org/meecast/mpvqml
+X-Maemo-Method=org.meecast.mpvqml.openFile
 
 [X-Application]
 Permissions=Audio;Downloads;Internet;Music;RemovableMedia;Videos;UserDirs

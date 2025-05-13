@@ -19,7 +19,8 @@ FullscreenContentPage {
     property variant subs: [] 
     property variant videos: [] 
     property variant audios: [] 
-    property int current_mpvid: -1
+    property int current_sub: -1
+    property int current_audio: -1
 
     Settings {
         id: appSettings
@@ -65,7 +66,6 @@ FullscreenContentPage {
            var count = renderer.getProperty("track-list/count")
 
            var item = {mpvid: {"mpvid":-1, "langid":"", "title":"no"}}
-           subs.push(item)
            for ( var i = 0; i < count; i++){
                var type = renderer.getProperty("track-list/" + i + "/type") 
                if (type == "")
@@ -84,7 +84,11 @@ FullscreenContentPage {
                    videos.push(item)
                } 
            }
+           item = {mpvid: {"mpvid":-1, "langid":"", "title":qsTrId("OFF")}}
+           subs.push(item)
+           audios.push(item)
         }
+
         onPlaybackRestart: {
             if (renderer.getProperty("pause")){
                 play_button.icon.source = "image://theme/icon-m-play"
@@ -220,37 +224,74 @@ FullscreenContentPage {
                 }
                 */
                 IconButton {
+                    id: audio_item
+                    width: play_button.height
+                    height: Theme.itemSizeSmall
+                    visible: true
+                    icon.source: "image://theme/icon-m-file-audio"
+                    onClicked: {
+                        if (current_audio == -1){
+                            current_audio = audios[0]["mpvid"]["mpvid"]
+                            Notices.show(qsTrId("Audio") + " #" + audios[0]["mpvid"]["langid"] + " " + audios[0]["mpvid"]["title"], Notice.Short, Notice.Center)
+                        }else{
+                            var myflag = false
+                            for(var value in audios){
+                                if (myflag){
+                                    current_audio = audios[value]["mpvid"]["mpvid"]
+                                    Notices.show(qsTrId("Audio") + " #" + audios[value]["mpvid"]["langid"] + " " + audios[value]["mpvid"]["title"], Notice.Short, Notice.Center)
+                                    myflag = false
+                                    break
+                                }
+                                if (audios[value]["mpvid"]["mpvid"] == current_audio){
+                                    myflag = true
+                                }    
+                            }
+                            if (myflag){
+                                current_audio = audios[0]["mpvid"]["mpvid"]
+                                Notices.show(qsTrId("Audio") + " #" + audios[0]["mpvid"]["langid"] + " " + audios[0]["mpvid"]["title"], Notice.Short, Notice.Center)
+                            }
+                        }
+                        if (current_audio == -1)
+                            renderer.setProperty("audio", "no")
+                        else{
+                            renderer.setProperty("audio", current_audio)
+                        }
+
+                    }
+                }
+
+                IconButton {
                     id: sub_items
                     width: play_button.height
                     height: Theme.itemSizeSmall
                     visible: true
                     icon.source: "image://theme/icon-m-browser-popup"
                     onClicked: {
-                        if (current_mpvid == -1){
-                            current_mpvid = subs[1]["mpvid"]["mpvid"]
-                            Notices.show(subs[1]["mpvid"]["langid"] + " " + subs[1]["mpvid"]["title"], Notice.Short, Notice.Center)
+                        if (current_sub == -1){
+                            current_sub = subs[0]["mpvid"]["mpvid"]
+                            Notices.show(qsTrId("Subtitle") + " #" + subs[0]["mpvid"]["langid"] + " " + subs[0]["mpvid"]["title"], Notice.Short, Notice.Center)
                         }else{
                             var myflag = false
                             for(var value in subs){
                                 if (myflag){
-                                    current_mpvid = subs[value]["mpvid"]["mpvid"]
-                                    Notices.show(subs[value]["mpvid"]["langid"] + " " + subs[value]["mpvid"]["title"], Notice.Short, Notice.Center)
+                                    current_sub = subs[value]["mpvid"]["mpvid"]
+                                    Notices.show(qsTrId("Subtitle") + " #" + subs[value]["mpvid"]["langid"] + " " + subs[value]["mpvid"]["title"], Notice.Short, Notice.Center)
                                     myflag = false
                                     break
                                 }
-                                if (subs[value]["mpvid"]["mpvid"] == current_mpvid){
+                                if (subs[value]["mpvid"]["mpvid"] == current_sub){
                                     myflag = true
                                 }    
                             }
                             if (myflag){
-                                current_mpvid = subs[0]["mpvid"]["mpvid"]
-                                Notices.show(subs[0]["mpvid"]["langid"] + " " + subs[0]["mpvid"]["title"], Notice.Short, Notice.Center)
+                                current_sub = subs[0]["mpvid"]["mpvid"]
+                                Notices.show(qsTrId("Subtitle") + " #" + subs[0]["mpvid"]["langid"] + " " + subs[0]["mpvid"]["title"], Notice.Short, Notice.Center)
                             }
                         }
-                        if (current_mpvid == -1)
+                        if (current_sub == -1)
                             renderer.setProperty("sub", "no")
                         else{
-                            renderer.setProperty("sub", current_mpvid)
+                            renderer.setProperty("sub", current_sub)
                         }
                         //renderer.setProperty("sub", 2)
                     }
@@ -319,6 +360,7 @@ FullscreenContentPage {
                         anchors.verticalCenter: parent.verticalCenter
                         id: text_speed
                         text: "1.00X"
+                        font.pixelSize: Theme.fontSizeSmall
                     }
                 }
             }

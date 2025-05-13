@@ -4,11 +4,22 @@ import Sailfish.Pickers 1.0
 
 Page {
     id: mainpage
+    objectName: "mainpage"
     allowedOrientations: Orientation.All
     property bool seek_slider_pressed : false
 
+    Connections {
+        target: dbusAdaptor
+        onFileOpenRequested: { mainpage.openFile(path) }
+    }
+
     Component.onCompleted: {
     }
+
+    function openFile(path) {
+        pageStack.push(Qt.resolvedUrl("play.qml"), {selectedFile: path})
+    }
+
     Column {
         id: column
         spacing: Theme.paddingLarge
@@ -52,7 +63,7 @@ Page {
              allowedOrientations: Orientation.All
              nameFilters: [ '*.*' ]
              onSelectedContentPropertiesChanged: {
-                 pageStack.push(Qt.resolvedUrl("play.qml"), {selectedFile: selectedContentProperties.filePath})
+                 mainpage.openFile(selectedContentProperties.filePath)
              }
          }
      }
@@ -69,7 +80,7 @@ Page {
                 id: urlinput
                 label: qsTrId("Input URL")
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: pageStack.push(Qt.resolvedUrl("play.qml"), {selectedFile: urlinput.text})
+                EnterKey.onClicked: mainpage.openFile(urlinput.text)
             }
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -77,9 +88,8 @@ Page {
                 anchors.top: urlinput.bottom
                 text: qsTrId("Ok")
                 icon.source: "image://theme/icon-m-link"
-                onClicked: pageStack.push(Qt.resolvedUrl("play.qml"), {selectedFile: urlinput.text})
+                onClicked: mainpage.openFile(urlinput.text)
             }
          }
      }
-
 }

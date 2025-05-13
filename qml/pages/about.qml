@@ -18,7 +18,8 @@ Page {
     MpvObject {
         id: renderer_about
         objectName: "renderer_about"
-        anchors.fill: parent
+        height: 1
+        width: 1
         onPlaybackRestart: {
         }
         onMpvVersionIsDone: {
@@ -44,7 +45,7 @@ Page {
                 title: qsTrId("About MpvQML")
             }
             SectionHeader {
-                text: qsTrId("MpvQMl") + " version " + "0.3 " + "based on: "
+                text: qsTrId("MpvQML") + " version " + "0.4 " + "based on: "
             }
             TextArea {
                 id: version_label
