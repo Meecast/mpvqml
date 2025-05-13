@@ -1,3 +1,4 @@
+%define __requires_exclude ^libdbus-1.*$
 Name:       harbour-mpvqml
 Summary:    Mpv with Qml
 Version:    0.4
