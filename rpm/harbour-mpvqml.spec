@@ -2,7 +2,7 @@
 Name:       harbour-mpvqml
 Summary:    Mpv with Qml
 Version:    0.4
-Release:    1
+Release:    3
 License:    GPL-2.0
 URL:        https://meecast.org
 Source0:    %{name}-%{version}.tar.bz2
