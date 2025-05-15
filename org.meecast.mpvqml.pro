@@ -32,6 +32,6 @@ CONFIG += \
     sailfishapp_i18n \
 
 TRANSLATIONS = \
-   translations/org.meecast.mpvqml-ru.ts \
+   translations/harbour-mpvqml-ru.ts \
 
 PKGCONFIG += mpv
