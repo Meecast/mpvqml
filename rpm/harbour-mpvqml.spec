@@ -38,7 +38,7 @@ sed -i "s/ -pie//" Makefile
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
-* Tue May 15 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.5-1
+* Thu May 15 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.5-1
 - Added Russian translation
 * Tue May 13 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.4-1
 - Added dbus to start video playback in mpvqml using FileBrowser on the device
