@@ -27,6 +27,11 @@ DISTFILES += \
 #QMAKE_LFLAGS += "-no-pie"
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
-CONFIG += sailfishapp_i18n
+CONFIG += \
+    sailfishapp_i18n_idbased \
+    sailfishapp_i18n \
+
+TRANSLATIONS = \
+   translations/org.meecast.mpvqml-ru.ts \
 
 PKGCONFIG += mpv
