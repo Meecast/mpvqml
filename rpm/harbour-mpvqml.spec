@@ -2,7 +2,7 @@
 Name:       harbour-mpvqml
 Summary:    Mpv with Qml
 Version:    0.5
-Release:    1
+Release:    2
 License:    GPL-2.0
 URL:        https://meecast.org
 Source0:    %{name}-%{version}.tar.bz2
@@ -38,6 +38,8 @@ sed -i "s/ -pie//" Makefile
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Fri May 16 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.5-2
+- Fixed [X-Sailjail] permissions
 * Thu May 15 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.5-1
 - Added Russian translation
 * Tue May 13 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.4-1
