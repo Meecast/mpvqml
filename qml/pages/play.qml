@@ -9,6 +9,7 @@ import Nemo.KeepAlive 1.2
 FullscreenContentPage {
     id: playpage
     allowedOrientations: Orientation.All
+    backNavigation: false
     property string selectedFile: ""
     property double duration_time
     property double time_position
@@ -21,16 +22,26 @@ FullscreenContentPage {
     property variant audios: [] 
     property int current_sub: -1
     property int current_audio: -1
+    property int volume: -1
+    property int inactiveBrightness: -1
+    property int activeBrightness: -1
+    property int brightness: -1
+
 
     Settings {
         id: appSettings
     }
 
     Component.onCompleted: {
+        renderer.get_display_brightness()
         renderer.command(["loadfile", selectedFile])
         fadeRect.folded = true
         timerow.visible = true
         main_column.height = timerow.height + buttons_row.height
+    }
+
+    Component.onDestruction: {
+        renderer.set_display_brightness(inactiveBrightness)
     }
 
     function savePosition(){
@@ -56,6 +67,26 @@ FullscreenContentPage {
 
     DisplayBlanking {
         preventBlanking: prevent_blanking_display
+    }
+
+    Timer {
+        id: hideVolume
+        interval: 500
+        running: false
+        repeat: false
+        onTriggered: {
+            volume_label.visible = false
+        }
+    }
+
+    Timer {
+        id: hideBrightness
+        interval: 500
+        running: false
+        repeat: false
+        onTriggered: {
+            brightness_label.visible = false
+        }
     }
 
     MpvObject {
@@ -122,18 +153,127 @@ FullscreenContentPage {
             duration_time = _time
             duration.text = convert_time_to_string(_time)
         }
+        onBrightness: {
+            console.log("onBrightness")
+            if (inactiveBrightness === -1) {
+                inactiveBrightness = brightness
+                activeBrightness = brightness
+            }
+            playpage.brightness = brightness
+        }
+
 
         MouseArea {
+            id: mousearea
             anchors.fill: parent
-            onClicked: {
-                if (fadeRect.folded){
-                    fadeRect.folded = false
-                }else{
-                    fadeRect.folded = true
+            property int offset: page.height/20
+            property int offsetHeight: height - (offset*2)
+            property int step: offsetHeight / 10
+            property bool stepChanged: false
+            property int brightnessStep: 10
+            property int lambdaVolumeStep: -1
+            property int lambdaBrightnessStep: -1
+            property int currentVolume: -1
+
+            function calculateStep(mouse) {
+                return Math.round((offsetHeight - (mouse.y-offset)) / step)
+            }
+
+            onReleased: {
+                if (!stepChanged){
+                    if (fadeRect.folded){
+                        fadeRect.folded = false
+                    }else{
+                        fadeRect.folded = true
+                    }
+                }
+                lambdaVolumeStep = -1
+                lambdaBrightnessStep = -1
+                stepChanged = false
+            }
+
+            onPressed: {
+                pacontrol.update()
+                lambdaBrightnessStep = lambdaVolumeStep = calculateStep(mouse)
+            }
+
+            function doubleClicked(mouse) {
+                var newPos = null
+                if(mouse.x < mousearea.width/2 ) {
+                    newPos = videoPlayer.position - 5000
+                    if(newPos < 0) newPos = 0
+                    videoPlayer.seek(newPos)
+                    backwardIndicator.visible = true
+                } else if (mouse.x > mousearea.width/2) {
+                    newPos = videoPlayer.position + 5000
+                    if(newPos > videoPlayer.duration) {
+                        return
+                    }
+                    videoPlayer.seek(newPos)
+                    forwardIndicator.visible = true
+                }
+            }
+
+            Connections {
+                target: pacontrol
+                onVolumeChanged: {
+                    mousearea.currentVolume = volume
+                    if (volume > 10) {
+                        mousearea.currentVolume = 10
+                    } else if (volume < 0) {
+                        mousearea.currentVolume = 0
+                    }
+                }
+            }
+            onPositionChanged: {
+                var step = calculateStep(mouse)
+                if((mouse.y - offset) > 0 && (mouse.y + offset) < offsetHeight && mouse.x < mousearea.width/2 && lambdaVolumeStep !== step) {
+                    var curVolume = currentVolume - (lambdaVolumeStep - step)
+                    pacontrol.setVolume(curVolume)
+                    if (curVolume > 10) {
+                        curVolume = 10
+                    } else if (curVolume < 0) {
+                        curVolume = 0
+                    }
+                    volume_label.text = qsTrId("Volume") + ":" + (curVolume*10) + "%"
+                    volume_label.visible = true
+                    hideVolume.restart()
+                    lambdaVolumeStep = step
+                    pacontrol.update()
+                    stepChanged = true
+                } else if ((mouse.y - offset) > 0 && (mouse.y + offset) < offsetHeight && mouse.x > mousearea.width/2 && lambdaBrightnessStep !== step) {
+                    renderer.get_display_brightness()
+                    var relativeStep = Math.round(playpage.brightness/brightnessStep) - (lambdaBrightnessStep - step)
+                    if (relativeStep > 10) relativeStep = 10;
+                    if (relativeStep < 0) relativeStep = 0;
+                    renderer.set_display_brightness(relativeStep * brightnessStep)
+                    activeBrightness = relativeStep * brightnessStep
+                    lambdaBrightnessStep = step
+                    brightness_label.visible = true
+                    brightness_label.text = qsTrId("Brightness") + ":" + (activeBrightness) + "%"
+                    hideBrightness.restart()
+                    stepChanged = true
                 }
             }
         }
     }
+
+    Label {
+        id: volume_label
+        anchors.centerIn: parent
+        font.pixelSize: Theme.fontSizeHuge
+        text: ""
+        visible: false
+    }
+
+    Label {
+        id: brightness_label
+        anchors.centerIn: parent
+        font.pixelSize: Theme.fontSizeHuge
+        text: ""
+        visible: false
+    }
+
     Rectangle {
         id: fadeRect
         anchors.fill: parent

@@ -33,6 +33,8 @@ private Q_SLOTS:
 
 public slots:
     void command(const QVariant& params);
+    void get_display_brightness();
+    void set_display_brightness(int brightness);
     void setProperty(const QString& name, const QVariant& value);
     QVariant getProperty(const QString& name);
     QString getMpvVersion();
@@ -44,6 +46,7 @@ signals:
     void updateDuration(double _time);
     void playbackRestart();
     void fileLoaded();
+    void brightness(int brightness);
 
 private slots:
     void doUpdate();

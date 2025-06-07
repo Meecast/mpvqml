@@ -45,7 +45,22 @@ Page {
                 title: qsTrId("About MpvQML")
             }
             SectionHeader {
-                text: "MpvQML " + qsTrId("version") + " 0.5 " + qsTrId("based on:")
+                text: qsTr("MpvQML is frontend for mpv")
+            }
+
+            Label {
+                x : Theme.horizontalPageMargin
+                width: parent.width 
+                wrapMode: Text.WordWrap
+                font.pixelSize: Theme.fontSizeSmall
+                linkColor: Theme.highlightColor
+                text:  "<a href=\"https://github.com/Meecast/mpvqml/\">" + qsTr("Source on GitHub") + "</a>" 
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+
+
+            SectionHeader {
+                text: "MpvQML " + qsTrId("version") + " 0.6 " + qsTrId("based on:")
             }
             TextArea {
                 id: version_label

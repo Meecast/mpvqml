@@ -4,9 +4,13 @@
 
 
 #include <sailfishapp.h>
+#include "volume/pulseaudiocontrol.h"
 #include <QtQuick>
 #include "settings.h"
 #include "dbusadaptor.h"
+#include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusReply>
 
 namespace
 {
@@ -224,6 +228,37 @@ void MpvObject::doUpdate()
 {
     update();
 }
+void MpvObject::set_display_brightness(int brightness){
+    //dbus-send --system --print-reply --dest=com.nokia.mce /com/nokia/mce/request com.nokia.mce.request.set_config string:/system/osso/dsm/display/display_brightness variant:int32:5
+    QDBusMessage m = QDBusMessage::createMethodCall("com.nokia.mce",
+                                                     "/com/nokia/mce/request",
+                                                     "com.nokia.mce.request",
+                                                     "set_config");
+    QList<QVariant> args;
+    args.append("/system/osso/dsm/display/display_brightness");
+    args.append(QVariant::fromValue(QDBusVariant(brightness)));
+    m.setArguments(args);
+    QDBusConnection::systemBus().call(m);
+}
+void MpvObject::get_display_brightness()
+{
+    //dbus-send --system --print-reply --dest=com.nokia.mce /com/nokia/mce/request com.nokia.mce.request.get_config string:/system/osso/dsm/display/display_brightness
+    QDBusMessage m = QDBusMessage::createMethodCall("com.nokia.mce",
+                                                     "/com/nokia/mce/request",
+                                                     "com.nokia.mce.request",
+                                                     "get_config");
+    QList<QVariant> args;
+    args.append("/system/osso/dsm/display/display_brightness");
+    m.setArguments(args);
+
+    QDBusReply<QDBusVariant> reply = QDBusConnection::systemBus().call(m);
+    if (!reply.isValid()) {
+        qDebug()<<QString("D-bus %1 calling error: %2").arg("/system/osso/dsm/display/display_brightness").arg(reply.error().message());
+        return;
+    }
+    emit brightness(reply.value().variant().toInt());
+}
+
 
 void MpvObject::command(const QVariant& params)
 {
@@ -290,6 +325,8 @@ int main(int argc, char *argv[])
     view->setSource(SailfishApp::pathTo(QStringLiteral("qml/main.qml")));
     DBusAdaptor dbusAdaptor(view.data());
     view->rootContext()->setContextProperty(QStringLiteral("dbusAdaptor"), &dbusAdaptor);
+    PulseAudioControl pacontrol;
+    view->rootContext()->setContextProperty("pacontrol", &pacontrol);
 
     QObject *object = view->rootObject();
     if (argc>1){

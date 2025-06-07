@@ -4,8 +4,10 @@ QT += qml
 
 CONFIG += \
     sailfishapp
+    dbus \
 
 PKGCONFIG += \
+           dbus-1 \
 
 QT += \
     dbus
@@ -14,11 +16,13 @@ SOURCES += \
     src/main.cpp \
     src/settings.cpp \
     src/dbusadaptor.cpp \
+    src/volume/pulseaudiocontrol.cpp \
 
 HEADERS += \
     src/main.h \
     src/settings.h \
     src/dbusadaptor.h \
+    src/volume/pulseaudiocontrol.h \
 
 DISTFILES += \
     rpm/harbour-mpvqml \

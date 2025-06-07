@@ -7,10 +7,6 @@
         <source></source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="OFF">
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
     <message id="About MpvQML">
         <source></source>
         <translation>О приложении</translation>
@@ -47,14 +43,6 @@
         <source></source>
         <translation>Настройки</translation>
     </message>
-    <message id="Audio">
-        <source></source>
-        <translation>Аудио</translation>
-    </message>
-    <message id="Subtitle">
-        <source></source>
-        <translation type="unfinished">Субтитры</translation>
-    </message>
     <message id="Save position on quit">
         <source></source>
         <translation>Сохранять позицию при выходе</translation>
@@ -62,6 +50,37 @@
     <message id="Remember current playback position on exit. When the same file is played again mpv will seek to the previous position.">
         <source></source>
         <translation>Запомнить текущее положение воспроизведения при выходе. При повторном открытии mpv будет продолжать воспроизведение с этого места.</translation>
+    </message>
+    <message id="OFF">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="Volume">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="Audio">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="Subtitle">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="Brightness">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>about</name>
+    <message>
+        <source>Source on GitHub</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MpvQML is frontend for mpv</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
