@@ -59,15 +59,15 @@
         <source></source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="Brightness">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="Audio">
         <source></source>
         <translation type="unfinished"></translation>
     </message>
     <message id="Subtitle">
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="Brightness">
         <source></source>
         <translation type="unfinished"></translation>
     </message>

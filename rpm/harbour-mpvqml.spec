@@ -1,8 +1,8 @@
 %define __requires_exclude ^libdbus-1|libQt5Quick.so.5.*$
 Name:       harbour-mpvqml
 Summary:    Mpv with Qml
-Version:    0.5
-Release:    2
+Version:    0.6
+Release:    1
 License:    GPL-2.0
 URL:        https://meecast.org
 Source0:    %{name}-%{version}.tar.bz2
@@ -38,8 +38,8 @@ sed -i "s/ -pie//" Makefile
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
-* Sun Jun 07 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.6-1
-- Added gestures for volume and brightness changing 
+* Mon Jun 23 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.6-1
+- Added gestures for changing volume, brightness and seek
 - Updated About page
 * Fri May 16 2025 Vlad Vasilyeu <vasvlad@gmail.com> - 0.5-2
 - Fixed [X-Sailjail] permissions
